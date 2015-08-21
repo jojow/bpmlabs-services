@@ -1,0 +1,29 @@
+{
+  "name": "bpmlabs-services",
+  "version": "0.1.0",
+  "author": "Johannes Wettinger <mail@jojow.de>",
+  "description": "Some basic services to be used for implementing business processes in the BPM labs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jojow/bpmlabs-services"
+  },
+  "contributors": [
+    {
+      "name": "Johannes Wettinger",
+      "email": "mail@jojow.de"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "~3.10.1",
+    "soap": "~0.9.1",
+    "http-server": "~0.8.0"
+  },
+  "scripts": {
+    "start": "./bin/server",
+    "static": "./node_modules/http-server/bin/http-server ./public -p 8888 --cors"
+  },
+  "engines": {
+    "node": ">= 0.10"
+  }
+}

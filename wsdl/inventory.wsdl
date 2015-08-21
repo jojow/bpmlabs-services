@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:tns="urn:FlowSOG:Inventory" xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:SOAP-ENC="http://www.w3.org/2003/05/soap-encoding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:FlowSOG="urn:FlowSOG:Inventory" xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/" xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" name="urn:FlowSOG:Inventory" targetNamespace="urn:FlowSOG:Inventory">
+
+  <types>
+    <schema xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:SOAP-ENC="http://www.w3.org/2003/05/soap-encoding" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:FlowSOG="urn:FlowSOG:Inventory" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:FlowSOG:Inventory" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+      <import namespace="http://www.w3.org/2003/05/soap-encoding"/>
+
+      <complexType name="status">
+        <sequence>
+          <element name="currentAvailability" minOccurs="1" maxOccurs="1" default="available">
+            <simpleType>
+              <restriction base="xsd:string">
+                <enumeration value="available"/>
+                <enumeration value="not available"/>
+              </restriction>
+            </simpleType>
+          </element>
+          <element name="availableAgainInDays" type="xsd:integer" minOccurs="0" maxOccurs="1">
+            <annotation>
+              <documentation>
+                If product is not available, this value indicates in how many days the product is expected to be available again.
+              </documentation>
+            </annotation>
+          </element>
+          <any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace"/>
+        </sequence>
+        <anyAttribute/>
+      </complexType>
+
+      <complexType name="product">
+        <sequence>
+          <element name="id" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+          <element name="name" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+          <element name="producer" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+          <element name="weight" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
+          <element name="price" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
+          <any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace"/>
+        </sequence>
+        <anyAttribute/>
+      </complexType>
+
+      <complexType name="list">
+        <sequence>
+          <element name="product" type="FlowSOG:product" minOccurs="0" maxOccurs="unbounded"/>
+          <any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace"/>
+        </sequence>
+        <anyAttribute/>
+      </complexType>
+    </schema>
+  </types>
+  
+  <documentation>
+    Inventory service
+  </documentation>
+
+  <!-- SOAP faults: http://web-gmazza.rhcloud.com/blog/entry/asynchronous-web-service-calls -->
+  <!-- <message name="fault">
+    <part name="error" type="xsd:string"/>
+  </message> -->
+
+  <message name="checkAvailabilityRequest">
+    <part name="product" type="FlowSOG:product"/>
+  </message>
+
+  <message name="checkAvailabilityResponse">
+    <part name="status" type="FlowSOG:status"/>
+    <part name="product" type="FlowSOG:product"/>
+  </message>
+
+  <message name="checkAvailabilityAsyncRequest">
+    <part name="callbackUrl" type="xsd:anyURI"/>
+    <part name="product" type="FlowSOG:product"/>
+  </message>
+
+  <message name="checkAvailabilityAsyncResponse">
+  </message>
+
+  <message name="listProductsRequest">
+    <part name="limit" type="xsd:integer"/>
+  </message>
+
+  <message name="listProductsResponse">
+    <part name="list" type="FlowSOG:list"/>
+  </message>
+
+  <portType name="InventoryPortType">
+    <operation name="checkAvailability">
+      <input message="tns:checkAvailabilityRequest"/>
+      <output message="tns:checkAvailabilityResponse"/>
+      <!-- <fault message="tns:fault"/> -->
+    </operation>
+    <operation name="checkAvailabilityAsync">
+      <input message="tns:checkAvailabilityAsyncRequest"/>
+      <output message="tns:checkAvailabilityAsyncResponse"/>
+    </operation>
+    <operation name="listProducts">
+      <input message="tns:listProductsRequest"/>
+      <output message="tns:listProductsResponse"/>
+    </operation>
+  </portType>
+
+  <!-- TODO: we play the client for this PortType that is provided by the workflow -->
+  <portType name="InventoryCallbackPortType">
+    <operation name="onFinishCheckAvailability">
+      <input message="tns:checkAvailabilityResponse"/>
+    </operation>
+  </portType>
+
+  <binding name="InventorySoapBinding" type="tns:InventoryPortType">
+    <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="checkAvailability">
+      <SOAP:operation style="rpc"/>
+      <input>
+        <!-- <SOAP:body use="encoded" namespace="urn:FlowSOG:Inventory" encodingStyle="http://www.w3.org/2003/05/soap-encoding"/> -->
+        <SOAP:body use="literal"/>
+      </input>
+      <output>
+        <SOAP:body use="literal"/>
+      </output>
+      <!-- <fault>
+        <SOAP:body use="literal"/>
+      </fault> -->
+    </operation>
+    <operation name="checkAvailabilityAsync">
+      <SOAP:operation style="rpc"/>
+      <input>
+        <SOAP:body use="literal"/>
+      </input>
+      <output>
+        <SOAP:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="listProducts">
+      <SOAP:operation style="rpc"/>
+      <input>
+        <SOAP:body use="literal"/>
+      </input>
+      <output>
+        <SOAP:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+
+  <binding name="InventoryCallbackSoapBinding" type="tns:InventoryCallbackPortType">
+    <SOAP:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="onFinishCheckAvailability">
+      <SOAP:operation style="rpc"/>
+      <input>
+        <SOAP:body use="literal"/>
+      </input>
+    </operation>
+  </binding>
+
+  <service name="InventoryService">
+    <port name="InventoryPort" binding="tns:InventorySoapBinding">
+      <SOAP:address location="{{baseAddress}}/InventoryService/InventoryPort"/>
+    </port>
+  </service>
+
+  <service name="InventoryCallbackService">
+    <port name="InventoryCallbackPort" binding="tns:InventoryCallbackSoapBinding">
+      <SOAP:address location=""/>
+    </port>
+  </service>
+</definitions>
