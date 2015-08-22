@@ -16,4 +16,13 @@ cd $APP_DIR
 
 #forever -a -c "npm start" -l ./forever.log -o ./out.log -e ./err.log .
 forever start -a -c "npm start" -l ./forever.log -o ./out.log -e ./err.log .
+
+if [ -z "$STATIC_PORT" ]; then
+  export STATIC_PORT="8888"
+fi
+
+if [ -z "$STATIC_DIR" ]; then
+  export STATIC_DIR="./public"
+fi
+
 forever start -a -c "npm run static" -l ./forever.static.log -o ./out.static.log -e ./err.static.log .

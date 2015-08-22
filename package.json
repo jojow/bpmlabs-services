@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "./bin/server",
-    "static": "./node_modules/http-server/bin/http-server ./public -p 8888 --cors"
+    "static": "./node_modules/http-server/bin/http-server $STATIC_DIR -p $STATIC_PORT --cors"
   },
   "engines": {
     "node": ">= 0.10"
