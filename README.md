@@ -2,6 +2,14 @@
 
 Some basic services to be used for implementing business processes in the BPM labs.
 
+Prepare the host using curl:
+
+    curl -L https://raw.github.com/jojow/bpmlabs-services/master/prepare.sh | bash
+
+Or using wget:
+
+    wget -qO- https://raw.github.com/jojow/bpmlabs-services/master/prepare.sh | bash
+
 Install using curl:
 
     curl -L https://raw.github.com/jojow/bpmlabs-services/master/install.sh | bash
