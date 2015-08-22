@@ -15,10 +15,12 @@ source $NVM_DIR/nvm.sh
 
 cd $APP_DIR
 
-FOREVER_ROOT="$APP_DIR/.forever"
+export FOREVER_ROOT="$APP_DIR/.forever"
 
-#forever -a -c "npm start" -l ./forever.log -o ./out.log -e ./err.log .
-forever start -a -c "npm start" -l ./forever.log -o ./out.log -e ./err.log .
+#forever -a -c "npm start" -l forever.log -o out.log -e err.log $APP_DIR
+forever start -a -c "npm start" -l forever.log -o out.log -e err.log $APP_DIR
+
+
 
 if [ -z "$STATIC_PORT" ]; then
   STATIC_PORT="8888"
@@ -28,4 +30,4 @@ if [ -z "$STATIC_DIR" ]; then
   STATIC_DIR="./public"
 fi
 
-forever start -a -c "npm run static" -l ./forever.static.log -o ./out.static.log -e ./err.static.log .
+forever start -a  -l forever.static.log -o out.static.log -e err.static.log $APP_DIR/node_modules/http-server/bin/http-server $STATIC_DIR -p $STATIC_PORT --cors
