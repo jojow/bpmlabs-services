@@ -2,7 +2,7 @@
 
 Some basic services to be used for implementing business processes in the BPM labs.
 
-Prepare the host using curl:
+Prepare the host using curl (may require root access):
 
     curl -L https://raw.github.com/jojow/bpmlabs-services/master/prepare.sh | bash
 

@@ -9,7 +9,7 @@ sys_has() {
 
 
 if sys_has "apt-get"; then
-  DEBIAN_FRONTEND="noninteractive"
+  export DEBIAN_FRONTEND="noninteractive"
   sudo apt-get -y update
   sudo apt-get -y install curl git python-software-properties python g++ make
 elif sys_has "yum"; then
