@@ -20,7 +20,7 @@
     "http-server": "~0.8.0"
   },
   "scripts": {
-    "start": "./bin/server"
+    "start": "node ./bin/server"
   },
   "engines": {
     "node": ">= 0.10"
