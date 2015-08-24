@@ -30,4 +30,6 @@ if [ -z "$STATIC_DIR" ]; then
   STATIC_DIR="$APP_DIR/public"
 fi
 
+mkdir -p $STATIC_DIR
+
 forever start -a  -l forever.static.log -o out.static.log -e err.static.log $APP_DIR/node_modules/http-server/bin/http-server $STATIC_DIR -p $STATIC_PORT --cors
