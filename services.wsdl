@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns:tns="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"
+<definitions targetNamespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"
+  xmlns:tns="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"
+  xmlns:FlowSOG="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:FlowSOG="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"
   xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
   xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
   xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
   xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
   xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
   xmlns="http://schemas.xmlsoap.org/wsdl/"
-  targetNamespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"
   name="FlowSOG">
 
   <documentation>
@@ -188,7 +188,7 @@
 
   <portType name="InventoryCallbackPortType">
     <operation name="onFinishCheckAvailability">
-      <input message="FlowSOG:onFinishCheckAvailabilityInput"/>
+      <input message="tns:onFinishCheckAvailabilityInput"/>
     </operation>
   </portType>
 
