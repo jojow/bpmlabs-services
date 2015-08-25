@@ -79,8 +79,8 @@ var checkAvailability = function(input, callback) {
   if (!productsById[input.product.id]) return callback(new Error('product missing'));
 
   var output = {
-    product: _.clone(productsById[input.product.id]),
-    status: {}
+    status: {},
+    product: _.clone(productsById[input.product.id])
   };
 
   if (output.product.available) output.status.currentAvailability = 'available';
@@ -101,43 +101,41 @@ var inventoryPort = { InventoryService: {} };
 inventoryPort.InventoryService.InventoryPort = {
   checkAvailability: function(input, callback, headers) {
     input = input || {};
-    input = input.checkAvailabilityInput || input;
 
     checkAvailability(input, function(err, output) {
       if (err) throw toSoapError(err);
 
-      callback({ checkAvailabilityOutput: output });
+      callback(output);
     });
   },
   checkAvailabilityAsync: function(input, callback, headers) {
     input = input || {};
-    input = input.checkAvailabilityAsyncInput || input;
 
     if (!input.callbackUrl) throw toSoapError(new Error('callback URL missing'));
 
     checkAvailability(input, function(err, output) {
       if (err) return console.error(err);
 
-      output.customerId = input.customerId;
+      output = {
+        customerId: input.customerId,
+        status: output.status,
+        product: output.product
+      };
 
       soap.createClient(input.callbackUrl + '?wsdl', function(err, client) {
         if (err) return console.error(err);
 
-        client.onFinishCheckAvailability({ onFinishCheckAvailabilityInput: output }, function(err, result) {
+        client.onFinishCheckAvailability(output, function(err, result) {
           if (err) return console.error(err);
-
-          //console.log(result);
         });
       });
     });
 
-    callback({ checkAvailabilityAsyncOutput: { estimatedDurationInMillis: responseDelay + _.random(1, 99) } });
+    //callback({ checkAvailabilityAsyncResponse: { estimatedDurationInMillis: responseDelay + _.random(1, 99) } });
+    callback();
   },
   listProducts: function(input, callback, headers) {
-    //if (err) throw toSoapError(err);
-
     input = input || {};
-    input = input.listProductsInput || input;
 
     if (input.limit) input.limit = parseInt(input.limit);
 
@@ -158,7 +156,7 @@ inventoryPort.InventoryService.InventoryPort = {
       count++;
     });
 
-    callback({ listProductsOutput: output });
+    callback(output);
   }
 };
 
