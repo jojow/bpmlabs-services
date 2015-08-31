@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions targetNamespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory" xmlns:tns="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory" xmlns:FlowSOG="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/" xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" name="FlowSOG">
+<definitions targetNamespace="http://iaas.uni-stuttgart.de/labs/FlowSOG" xmlns:tns="http://iaas.uni-stuttgart.de/labs/FlowSOG" xmlns:FlowSOG="http://iaas.uni-stuttgart.de/labs/FlowSOG" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/" xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" name="FlowSOG">
 
   <documentation>
     FlowSOG Shop services
@@ -10,7 +10,7 @@
   <!-- ===== -->
 
   <types>
-    <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory">
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://iaas.uni-stuttgart.de/labs/FlowSOG">
       <!-- <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/> -->
 
       <complexType name="status">
@@ -54,6 +54,56 @@
         </sequence>
         <anyAttribute/>
       </complexType>
+
+      <complexType name="order">
+        <sequence>
+          <element name="orderId" minOccurs="0" maxOccurs="1" type="xsd:string"/>
+          <element name="customerId" type="xsd:string"/>
+          <element name="products">
+            <complexType>
+              <sequence>
+                <element name="product" minOccurs="1" maxOccurs="unbounded">
+                  <complexType>
+                    <sequence>
+                      <element name="productId" type="xsd:string"/>
+                      <element name="numberOfItems" type="xsd:integer"/>
+                    </sequence>
+                    <anyAttribute/>
+                  </complexType>
+                </element>
+              </sequence>
+              <anyAttribute/>
+            </complexType>
+          </element>
+          <element name="shippingAddress" type="xsd:string"/>
+          <element name="paymentDetails">
+            <complexType>
+              <sequence>
+                <element name="bankName" type="xsd:string"/>
+                <element name="bankAddress" type="xsd:string"/>
+                <element name="accountNumber" type="xsd:string"/>
+                <element name="accountHolderName" type="xsd:string"/>
+              </sequence>
+              <anyAttribute/>
+            </complexType>
+          </element>
+          <element name="status" minOccurs="0" maxOccurs="1">
+            <simpleType>
+              <restriction base="xsd:string">
+                <enumeration value="ordered"/>
+                <enumeration value="payed"/>
+                <enumeration value="shipped"/>
+              </restriction>
+            </simpleType>
+          </element>
+        </sequence>
+        <anyAttribute/>
+      </complexType>
+
+      <!-- Empty response -->
+      <!-- <element name="myOpResponse"><complexType/></element> -->
+
+      <!-- Inventory Service -->
 
       <element name="checkAvailability">
         <complexType>
@@ -108,8 +158,82 @@
         </complexType>
       </element>
 
-      <!-- Empty response -->
-      <!-- <element name="myOpResponse"><complexType/></element> -->
+      <!-- Order Service -->
+
+      <element name="storeOrderDetails" type="FlowSOG:order"/>
+
+      <element name="storeOrderDetailsResponse">
+        <complexType>
+          <sequence>
+            <element name="orderId" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="getOrderDetails">
+        <complexType>
+          <sequence>
+            <element name="orderId" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="getOrderDetailsResponse" type="FlowSOG:order"/>
+
+      <element name="cancelOrder">
+        <complexType>
+          <sequence>
+            <element name="orderId" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+
+      <!-- Payment Service -->
+
+      <element name="calcTransactionCosts">
+        <complexType>
+          <sequence>
+            <element name="orderId" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="calcTransactionCostsResponse" type="xsd:decimal"/>
+
+      <element name="conductPayment">
+        <complexType>
+          <sequence>
+            <element name="orderId" type="xsd:string"/>
+            <element name="amount" type="xsd:decimal"/>
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="conductPaymentResponse" type="FlowSOG:order"/>
+
+      <!-- Shipment Service -->
+
+      <element name="calcShipmentCosts">
+        <complexType>
+          <sequence>
+            <element name="orderId" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="calcShipmentCostsResponse" type="xsd:decimal"/>
+
+      <element name="shipProducts">
+        <complexType>
+          <sequence>
+            <element name="orderId" type="xsd:string"/>
+            <element name="date" type="xsd:date"/>
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="shipProductsResponse" type="FlowSOG:order"/>
+
     </schema>
   </types>
 
@@ -119,6 +243,8 @@
 
   <!-- SOAP faults: http://web-gmazza.rhcloud.com/blog/entry/asynchronous-web-service-calls -->
   <!-- <message name="fault"><part name="error" type="xsd:string"/></message> -->
+
+  <!-- Inventory Service -->
 
   <message name="checkAvailabilityInput">
     <part name="checkAvailabilityInput" element="FlowSOG:checkAvailability"/>
@@ -142,6 +268,64 @@
 
   <message name="onFinishCheckAvailabilityInput">
     <part name="onFinishCheckAvailabilityInput" element="FlowSOG:onFinishCheckAvailability"/>
+  </message>
+
+  <!-- Order Service -->
+
+  <message name="storeOrderDetailsInput">
+    <part name="storeOrderDetailsInput" element="FlowSOG:storeOrderDetails"/>
+  </message>
+  
+  <message name="storeOrderDetailsOutput">
+    <part name="storeOrderDetailsOutput" element="FlowSOG:storeOrderDetailsResponse"/>
+  </message>
+
+  <message name="getOrderDetailsInput">
+    <part name="getOrderDetailsInput" element="FlowSOG:getOrderDetails"/>
+  </message>
+  
+  <message name="getOrderDetailsOutput">
+    <part name="getOrderDetailsOutput" element="FlowSOG:getOrderDetailsResponse"/>
+  </message>
+
+  <message name="cancelOrderInput">
+    <part name="cancelOrderInput" element="FlowSOG:cancelOrder"/>
+  </message>
+
+  <!-- Payment Service -->
+
+  <message name="calcTransactionCostsInput">
+    <part name="calcTransactionCostsInput" element="FlowSOG:calcTransactionCosts"/>
+  </message>
+  
+  <message name="calcTransactionCostsOutput">
+    <part name="calcTransactionCostsOutput" element="FlowSOG:calcTransactionCostsResponse"/>
+  </message>
+
+  <message name="conductPaymentInput">
+    <part name="conductPaymentInput" element="FlowSOG:conductPayment"/>
+  </message>
+  
+  <message name="conductPaymentOutput">
+    <part name="conductPaymentOutput" element="FlowSOG:conductPaymentResponse"/>
+  </message>
+
+  <!-- Shipment Service -->
+
+  <message name="calcShipmentCostsInput">
+    <part name="calcShipmentCostsInput" element="FlowSOG:calcShipmentCosts"/>
+  </message>
+  
+  <message name="calcShipmentCostsOutput">
+    <part name="calcShipmentCostsOutput" element="FlowSOG:calcShipmentCostsResponse"/>
+  </message>
+
+  <message name="shipProductsInput">
+    <part name="shipProductsInput" element="FlowSOG:shipProducts"/>
+  </message>
+  
+  <message name="shipProductsOutput">
+    <part name="shipProductsOutput" element="FlowSOG:shipProductsResponse"/>
   </message>
 
   <!-- ========== -->
@@ -169,6 +353,42 @@
     </operation>
   </portType>
 
+  <portType name="OrderPortType">
+    <operation name="storeOrderDetails">
+      <input message="tns:storeOrderDetailsInput"/>
+      <output message="tns:storeOrderDetailsOutput"/>
+    </operation>
+    <operation name="getOrderDetails">
+      <input message="tns:getOrderDetailsInput"/>
+      <output message="tns:getOrderDetailsOutput"/>
+    </operation>
+    <operation name="cancelOrder">
+      <input message="tns:cancelOrderInput"/>
+    </operation>
+  </portType>
+
+  <portType name="PaymentPortType">
+    <operation name="calcTransactionCosts">
+      <input message="tns:calcTransactionCostsInput"/>
+      <output message="tns:calcTransactionCostsOutput"/>
+    </operation>
+    <operation name="conductPayment">
+      <input message="tns:conductPaymentInput"/>
+      <output message="tns:conductPaymentOutput"/>
+    </operation>
+  </portType>
+
+  <portType name="ShipmentPortType">
+    <operation name="calcShipmentCosts">
+      <input message="tns:calcShipmentCostsInput"/>
+      <output message="tns:calcShipmentCostsOutput"/>
+    </operation>
+    <operation name="shipProducts">
+      <input message="tns:shipProductsInput"/>
+      <output message="tns:shipProductsOutput"/>
+    </operation>
+  </portType>
+
   <!-- ======== -->
   <!-- Bindings -->
   <!-- ======== -->
@@ -178,27 +398,27 @@
     <operation name="checkAvailability">
       <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory/checkAvailability"/>
       <input>
-        <!-- <SOAP:body use="encoded" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/> -->
-        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"/>
+        <!-- <SOAP:body use="encoded" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/> -->
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
       </input>
       <output>
-        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"/>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
       </output>
-      <!-- <fault><SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"/></fault> -->
+      <!-- <fault><SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/></fault> -->
     </operation>
     <operation name="checkAvailabilityAsync">
       <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory/checkAvailabilityAsync"/>
       <input>
-        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"/>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
       </input>
     </operation>
     <operation name="listProducts">
       <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory/listProducts"/>
       <input>
-        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"/>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
       </input>
       <output>
-        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"/>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
       </output>
     </operation>
   </binding>
@@ -208,8 +428,80 @@
     <operation name="onFinishCheckAvailability">
       <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory/onFinishCheckAvailability"/>
       <input>
-        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"/>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
       </input>
+    </operation>
+  </binding>
+
+  <binding name="OrderSoapBinding" type="tns:OrderPortType">
+    <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="storeOrderDetails">
+      <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Order/storeOrderDetails"/>
+      <input>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </input>
+      <output>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </output>
+    </operation>
+    <operation name="getOrderDetails">
+      <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Order/getOrderDetails"/>
+      <input>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </input>
+      <output>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </output>
+    </operation>
+    <operation name="cancelOrder">
+      <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Order/cancelOrder"/>
+      <input>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </input>
+    </operation>
+  </binding>
+
+  <binding name="PaymentSoapBinding" type="tns:PaymentPortType">
+    <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="calcTransactionCosts">
+      <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Payment/calcTransactionCosts"/>
+      <input>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </input>
+      <output>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </output>
+    </operation>
+    <operation name="conductPayment">
+      <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Payment/conductPayment"/>
+      <input>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </input>
+      <output>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </output>
+    </operation>
+  </binding>
+
+  <binding name="ShipmentSoapBinding" type="tns:ShipmentPortType">
+    <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="calcShipmentCosts">
+      <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Shipment/calcShipmentCosts"/>
+      <input>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </input>
+      <output>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </output>
+    </operation>
+    <operation name="shipProducts">
+      <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Shipment/shipProducts"/>
+      <input>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </input>
+      <output>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </output>
     </operation>
   </binding>
 
@@ -226,7 +518,25 @@
   <!-- This service endpoint has to be provided by the invoker, e.g., the BPEL workflow invoking the InventoryService -->
   <service name="InventoryCallbackService">
     <port name="InventoryCallbackPort" binding="tns:InventoryCallbackSoapBinding">
-      <SOAP:address location=""/>
+      <SOAP:address location="http://[HOST]:[PORT]"/>
+    </port>
+  </service>
+
+  <service name="OrderService">
+    <port name="OrderPort" binding="tns:OrderSoapBinding">
+      <SOAP:address location="{{baseAddress}}/OrderService/OrderPort"/>
+    </port>
+  </service>
+
+  <service name="PaymentService">
+    <port name="PaymentPort" binding="tns:PaymentSoapBinding">
+      <SOAP:address location="{{baseAddress}}/PaymentService/PaymentPort"/>
+    </port>
+  </service>
+
+  <service name="ShipmentService">
+    <port name="ShipmentPort" binding="tns:ShipmentSoapBinding">
+      <SOAP:address location="{{baseAddress}}/ShipmentService/ShipmentPort"/>
     </port>
   </service>
 

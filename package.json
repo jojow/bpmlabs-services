@@ -17,6 +17,7 @@
   "dependencies": {
     "lodash": "~3.10.1",
     "soap": "~0.9.1",
+    "uuid": "~2.0.1",
     "http-server": "~0.8.0"
   },
   "scripts": {
