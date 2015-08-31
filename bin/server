@@ -18,7 +18,6 @@ _.each(products, function(p) { productsById[p.id] = p; });
 var soapPort = process.env.SOAP_PORT || 3000;
 var soapBaseAddress = process.env.SOAP_BASE_ADDRESS || 'http://0.0.0.0:' + soapPort;
 var timeout = process.env.TIMEOUT || 20 * 60 * 1000; // 20 mins
-var responseDelay = process.env.RESPONSE_DELAY || 10 * 1000; // 10 seconds
 
 var rawWsdl = fs.readFileSync(path.resolve(__dirname, '..', 'services.wsdl'), 'utf8');
 var wsdl = rawWsdl.replace(/{{baseAddress}}/g, soapBaseAddress);
@@ -73,7 +72,7 @@ server.on('error', function(err) {
 
 
 // register SOAP endpoints for inventory service
-var checkAvailability = function(input, callback) {
+var checkAvailability = function(input, delay, callback) {
   if (!input.product || !input.product.id) return callback(new Error('product ID missing'));
 
   if (!productsById[input.product.id]) return callback(new Error('product missing'));
@@ -83,17 +82,19 @@ var checkAvailability = function(input, callback) {
     product: _.clone(productsById[input.product.id])
   };
 
-  if (output.product.available) output.status.currentAvailability = 'available';
-  else output.status.currentAvailability = 'not available';
-
-  output.status.availableAgainInDays = output.product.days;
+  if (output.product.available) {
+    output.status.currentAvailability = 'available';
+  } else {
+    output.status.currentAvailability = 'not available';
+    output.status.availableAgainInDays = output.product.days;
+  }
 
   delete output.product.available;
   delete output.product.days;
 
   setTimeout(function() {
     callback(null, output);
-  }, responseDelay);
+  }, delay);
 };
 
 var inventoryPort = { InventoryService: {} };
@@ -102,7 +103,9 @@ inventoryPort.InventoryService.InventoryPort = {
   checkAvailability: function(input, callback, headers) {
     input = input || {};
 
-    checkAvailability(input, function(err, output) {
+    var delay = process.env.RESPONSE_DELAY || 15 * 1000; // 15 seconds
+
+    checkAvailability(input, delay, function(err, output) {
       if (err) throw toSoapError(err);
 
       callback(output);
@@ -113,7 +116,9 @@ inventoryPort.InventoryService.InventoryPort = {
 
     if (!input.callbackUrl) throw toSoapError(new Error('callback URL missing'));
 
-    checkAvailability(input, function(err, output) {
+    var delay = process.env.RESPONSE_DELAY || 20 * 1000; // 20 seconds
+
+    checkAvailability(input, delay, function(err, output) {
       if (err) return console.error(err);
 
       output = {

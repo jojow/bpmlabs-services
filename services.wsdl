@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions targetNamespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"
-  xmlns:tns="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"
-  xmlns:FlowSOG="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/"
-  xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/"
-  xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/"
-  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-  xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/"
-  xmlns="http://schemas.xmlsoap.org/wsdl/"
-  name="FlowSOG">
+<definitions targetNamespace="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory" xmlns:tns="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory" xmlns:FlowSOG="http://iaas.uni-stuttgart.de/labs/FlowSOG/Inventory" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/" xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" name="FlowSOG">
 
   <documentation>
     FlowSOG Shop services
