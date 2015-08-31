@@ -13,7 +13,7 @@
     <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://iaas.uni-stuttgart.de/labs/FlowSOG">
       <!-- <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/> -->
 
-      <complexType name="status">
+      <complexType name="productStatus">
         <sequence>
           <element name="currentAvailability" minOccurs="1" maxOccurs="1" default="available">
             <simpleType>
@@ -116,7 +116,7 @@
       <element name="checkAvailabilityResponse">
         <complexType>
           <sequence>
-            <element name="status" type="FlowSOG:status"/>
+            <element name="status" type="FlowSOG:productStatus"/>
             <element name="product" type="FlowSOG:product"/>
           </sequence>
         </complexType>
@@ -152,7 +152,7 @@
         <complexType>
           <sequence>
             <element name="customerId" type="xsd:string"/>
-            <element name="status" type="FlowSOG:status"/>
+            <element name="status" type="FlowSOG:productStatus"/>
             <element name="product" type="FlowSOG:product"/>
           </sequence>
         </complexType>
