@@ -18,3 +18,10 @@ By default, everything gets installed to $HOME/bpmlabs-services, so you can run 
 
     cd $HOME/bpmlabs-services
     ./run.sh
+
+
+
+## Contributors
+
+Michael Hahn
+Johannes Wettinger
