@@ -24,4 +24,5 @@ By default, everything gets installed to $HOME/bpmlabs-services, so you can run 
 ## Contributors
 
 Michael Hahn
+
 Johannes Wettinger
