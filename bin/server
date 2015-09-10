@@ -124,14 +124,14 @@ inventoryPort.InventoryService.InventoryPort = {
 
     var response = {
       customerId: input.customerId,
-      productList: []
+      productList: { product: [] }
     };
 
     async.each(input.productId, function(id, callback) {
       checkAvailability({ productId: id }, delay, function(err, output) {
         if (err) return callback(err);
 
-        response.productList.push(output.product);
+        response.productList.product.push(output.product);
 
         callback();
       });
