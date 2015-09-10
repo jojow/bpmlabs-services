@@ -42,6 +42,7 @@
           <element name="producer" type="xsd:string" minOccurs="0" maxOccurs="1"/>
           <element name="weight" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
           <element name="price" type="xsd:decimal" minOccurs="0" maxOccurs="1"/>
+          <element name="status" type="FlowSOG:productStatus" minOccurs="0" maxOccurs="1"/>
           <!-- <any minOccurs="0" maxOccurs="unbounded" namespace="##targetNamespace"/> -->
         </sequence>
         <anyAttribute/>
@@ -108,7 +109,7 @@
       <element name="checkAvailability">
         <complexType>
           <sequence>
-            <element name="product" type="FlowSOG:product"/>
+            <element name="productId" type="xsd:string"/>
           </sequence>
         </complexType>
       </element>
@@ -116,7 +117,7 @@
       <element name="checkAvailabilityResponse">
         <complexType>
           <sequence>
-            <element name="status" type="FlowSOG:productStatus"/>
+            <!-- <element name="status" type="FlowSOG:productStatus"/> -->
             <element name="product" type="FlowSOG:product"/>
           </sequence>
         </complexType>
@@ -127,7 +128,7 @@
           <sequence>
             <element name="callbackUrl" type="xsd:string"/>
             <element name="customerId" type="xsd:string"/>
-            <element name="product" type="FlowSOG:product"/>
+            <element name="productId" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
           </sequence>
         </complexType>
       </element>
@@ -143,7 +144,7 @@
       <element name="listProductsResponse">
         <complexType>
           <sequence>
-            <element name="list" type="FlowSOG:productList"/>
+            <element name="productList" type="FlowSOG:productList"/>
           </sequence>
         </complexType>
       </element>
@@ -152,8 +153,8 @@
         <complexType>
           <sequence>
             <element name="customerId" type="xsd:string"/>
-            <element name="status" type="FlowSOG:productStatus"/>
-            <element name="product" type="FlowSOG:product"/>
+            <!-- <element name="status" type="FlowSOG:productStatus"/> -->
+            <element name="productList" type="FlowSOG:productList"/>
           </sequence>
         </complexType>
       </element>
