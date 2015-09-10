@@ -138,7 +138,9 @@ inventoryPort.InventoryService.InventoryPort = {
     }, function(err) {
       if (err) return console.error(err);
 
-      soap.createClient(input.callbackUrl + '?wsdl', function(err, client) {
+      soap.createClient(input.callbackUrl + '?wsdl', {
+        endpoint: input.callbackUrl
+      }, function(err, client) {
         if (err) return console.error(err);
 
         client.onFinishCheckAvailability(response, function(err, result) {
