@@ -161,6 +161,22 @@
 
       <!-- Order Service -->
 
+      <element name="calcOrderCosts">
+        <complexType>
+          <sequence>
+            <element name="orderId" type="xsd:string"/>
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="calcOrderCostsResponse">
+        <complexType>
+          <sequence>
+            <element name="orderCosts" type="xsd:decimal"/>
+          </sequence>
+        </complexType>
+      </element>
+
       <element name="storeOrderDetails" type="FlowSOG:order"/>
 
       <element name="storeOrderDetailsResponse">
@@ -199,7 +215,13 @@
         </complexType>
       </element>
 
-      <element name="calcTransactionCostsResponse" type="xsd:decimal"/>
+      <element name="calcTransactionCostsResponse">
+        <complexType>
+          <sequence>
+            <element name="transactionCosts" type="xsd:decimal"/>
+          </sequence>
+        </complexType>
+      </element>
 
       <element name="conductPayment">
         <complexType>
@@ -222,7 +244,13 @@
         </complexType>
       </element>
 
-      <element name="calcShipmentCostsResponse" type="xsd:decimal"/>
+      <element name="calcShipmentCostsResponse">
+        <complexType>
+          <sequence>
+            <element name="shipmentCosts" type="xsd:decimal"/>
+          </sequence>
+        </complexType>
+      </element>
 
       <element name="shipProducts">
         <complexType>
@@ -272,6 +300,14 @@
   </message>
 
   <!-- Order Service -->
+
+  <message name="calcOrderCostsInput">
+    <part name="calcOrderCostsInput" element="FlowSOG:calcOrderCosts"/>
+  </message>
+  
+  <message name="calcOrderCostsOutput">
+    <part name="calcOrderCostsOutput" element="FlowSOG:calcOrderCostsResponse"/>
+  </message>
 
   <message name="storeOrderDetailsInput">
     <part name="storeOrderDetailsInput" element="FlowSOG:storeOrderDetails"/>
@@ -355,6 +391,10 @@
   </portType>
 
   <portType name="OrderPortType">
+    <operation name="calcOrderCosts">
+      <input message="tns:calcOrderCostsInput"/>
+      <output message="tns:calcOrderCostsOutput"/>
+    </operation>
     <operation name="storeOrderDetails">
       <input message="tns:storeOrderDetailsInput"/>
       <output message="tns:storeOrderDetailsOutput"/>
@@ -436,6 +476,15 @@
 
   <binding name="OrderSoapBinding" type="tns:OrderPortType">
     <SOAP:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="calcOrderCosts">
+      <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Order/calcOrderCosts"/>
+      <input>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </input>
+      <output>
+        <SOAP:body use="literal" namespace="http://iaas.uni-stuttgart.de/labs/FlowSOG"/>
+      </output>
+    </operation>
     <operation name="storeOrderDetails">
       <SOAP:operation style="document" soapAction="http://iaas.uni-stuttgart.de/labs/FlowSOG/Order/storeOrderDetails"/>
       <input>

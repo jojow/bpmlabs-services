@@ -186,12 +186,27 @@ soap.listen(server, '/InventoryService/InventoryPort', inventoryPort, wsdl);
 var orderPort = { OrderService: {} };
 
 orderPort.OrderService.OrderPort = {
+  calcOrderCosts: function(input, callback, headers) {
+    input = input || {};
+
+    var order = orders[input.orderId];
+
+    if (!order) throw toSoapError('invalid order ID: ' + input.orderId);
+
+    var orderCosts = 0;
+
+    _.each(_.values(order.products.product), function(p) {
+      orderCosts = orderCosts + (productsById[p.productId].price * parseInt(p.numberOfItems));
+    });
+
+    callback({ orderCosts: orderCosts });
+  },
   storeOrderDetails: function(input, callback, headers) {
     input = input || {};
 
     input.orderId = input.orderId || uuid.v4();
     input.customerId = input.customerId || uuid.v4();
-    input.status = input.status || 'ordered';
+    if (!_.contains([ 'ordered', 'payed', 'shipped' ], input.status)) input.status = 'ordered';
 
     orders[input.orderId] = input;
 
@@ -242,7 +257,7 @@ paymentPort.PaymentService.PaymentPort = {
 
     if (!orders[input.orderId]) throw toSoapError('invalid order ID: ' + input.orderId);
 
-    callback(transactionCosts);
+    callback({ transactionCosts: transactionCosts });
   },
   conductPayment: function(input, callback, headers) {
     input = input || {};
@@ -282,7 +297,7 @@ shipmentPort.ShipmentService.ShipmentPort = {
 
     if (!orders[input.orderId]) throw toSoapError('invalid order ID: ' + input.orderId);
 
-    callback(shipmentCosts);
+    callback({ shipmentCosts: shipmentCosts });
   },
   shipProducts: function(input, callback, headers) {
     input = input || {};
