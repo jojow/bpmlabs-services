@@ -155,7 +155,7 @@ inventoryPort.InventoryService.InventoryPort = {
   listProducts: function(input, callback, headers) {
     input = input || {};
 
-    if (input.limit) input.limit = parseInt(input.limit);
+    if (input.limit) input.limit = _.floor(input.limit);
 
     var count = 0;
 
@@ -196,7 +196,7 @@ orderPort.OrderService.OrderPort = {
     var orderCosts = 0;
 
     _.each(_.values(order.products.product), function(p) {
-      orderCosts = orderCosts + (productsById[p.productId].price * parseInt(p.numberOfItems));
+      orderCosts = _.floor(orderCosts + (productsById[p.productId].price * p.numberOfItems), 2);
     });
 
     callback({ orderCosts: orderCosts });
@@ -264,7 +264,7 @@ paymentPort.PaymentService.PaymentPort = {
 
     if (!input.amount) throw toSoapError('amount missing');
 
-    input.amount = parseFloat(input.amount).toFixed(2);
+    input.amount = _.floor(input.amount, 2);
 
     var order = orders[input.orderId];
 
@@ -273,7 +273,7 @@ paymentPort.PaymentService.PaymentPort = {
     var total = transactionCosts + shipmentCosts;
 
     _.each(_.values(order.products.product), function(p) {
-      total = total + (productsById[p.productId].price * parseInt(p.numberOfItems));
+      total = _.floor(total + (productsById[p.productId].price * p.numberOfItems), 2);
     });
 
     if (total > input.amount) throw toSoapError('amount is not enough; must be at least ' + total);
