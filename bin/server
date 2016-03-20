@@ -36,7 +36,8 @@ var toSoapError = function(err) {
         Value: "soap:Sender"
         //, Subcode: { value: "soap:Error" }
       },
-      Reason: { Text: err.soapText || err.message || err.toString() }
+      Reason: { Text: err.soapText || err.message || err.toString() },
+      statusCode: 500
     }
   };
 };
