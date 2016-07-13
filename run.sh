@@ -18,7 +18,7 @@ cd $APP_DIR
 export FOREVER_ROOT="$APP_DIR/.forever"
 
 #forever -a -c "npm start" -l forever.log -o out.log -e err.log $APP_DIR
-forever start -a -c "npm start" -l forever.log -o out.log -e err.log $APP_DIR
+forever start -a -l forever.log -o out.log -e err.log $APP_DIR
 
 
 
@@ -32,4 +32,4 @@ fi
 
 mkdir -p $STATIC_DIR
 
-forever start -a  -l forever.static.log -o out.static.log -e err.static.log $APP_DIR/node_modules/http-server/bin/http-server $STATIC_DIR -p $STATIC_PORT --cors
+forever start -a -l forever.static.log -o out.static.log -e err.static.log $APP_DIR/node_modules/http-server/bin/http-server $STATIC_DIR -p $STATIC_PORT --cors
