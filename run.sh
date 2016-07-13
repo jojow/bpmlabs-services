@@ -15,12 +15,7 @@ source $NVM_DIR/nvm.sh
 
 cd $APP_DIR
 
-#export FOREVER_ROOT="$APP_DIR/.forever"
-
-#forever -a -c "npm start" -l forever.log -o out.log -e err.log $APP_DIR
-#forever start -a -l forever.log -o out.log -e err.log $APP_DIR
-
-npm start-forever
+npm run start-forever
 
 
 
@@ -34,6 +29,4 @@ fi
 
 mkdir -p $STATIC_DIR
 
-#forever start -a -l forever.static.log -o out.static.log -e err.static.log $APP_DIR/node_modules/http-server/bin/http-server $STATIC_DIR -p $STATIC_PORT --cors
-
-npm static-forever
+npm run static-forever

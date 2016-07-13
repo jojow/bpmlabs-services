@@ -7,12 +7,6 @@
     "type": "git",
     "url": "https://github.com/jojow/bpmlabs-services"
   },
-  "contributors": [
-    {
-      "name": "Johannes Wettinger",
-      "email": "mail@jojow.de"
-    }
-  ],
   "license": "MIT",
   "dependencies": {
     "lodash": "~3.10.1",
@@ -26,8 +20,5 @@
     "start": "node bin/server",
     "start-forever": "forever start -a -l forever.log -o out.log -e err.log bin/server",
     "static-forever": "forever start -a -l forever.static.log -o out.static.log -e err.static.log node_modules/http-server/bin/http-server $STATIC_DIR -p $STATIC_PORT --cors"
-  },
-  "engines": {
-    "node": ">= 0.10"
   }
 }
