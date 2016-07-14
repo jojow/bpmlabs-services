@@ -29,4 +29,4 @@ fi
 
 mkdir -p $STATIC_DIR
 
-npm run static-forever
+STATIC_PORT=$STATIC_PORT STATIC_DIR=$STATIC_DIR npm run static-forever
